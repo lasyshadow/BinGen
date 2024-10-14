@@ -1,5 +1,6 @@
 import random
 import requests
+import time
 
 def check_Bin(bin_number):
     url = f"https://binlist.io/lookup/{bin_number}"
