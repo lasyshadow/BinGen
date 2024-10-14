@@ -57,7 +57,7 @@ def main():
     valid_bins = []
     for _ in range(num_bins):
         bin_number = generate_bin(card_type)
-        if check_bin(bin_number):
+        if check_Bin(bin_number):
             valid_bins.append(bin_number)
 
     if valid_bins:
