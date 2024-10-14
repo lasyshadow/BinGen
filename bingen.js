@@ -88,8 +88,8 @@ async function main() {
     DEV - @XDPRO2
     `);
 
-    const cardType = await prompt('Enter card type (Visa, MasterCard, American Express, Discover, JCB, Diners Club, UnionPay): ').trim();
-    let customPrefix = await prompt('Enter a custom BIN prefix (or leave empty): ').trim();
+    const cardType = (await prompt('Enter card type (Visa, MasterCard, American Express, Discover, JCB, Diners Club, UnionPay): ')).trim();
+    let customPrefix = (await prompt('Enter a custom BIN prefix (or leave empty): ')).trim();
     customPrefix = customPrefix === '' ? null : customPrefix;
     const amount = parseInt(await prompt('Enter the number of BINs to generate: '), 10);
 
