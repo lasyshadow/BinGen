@@ -1,18 +1,29 @@
 import random
 import requests
 
-def is_valid_bin(bin_number, card_type):
-    """Checks the validity of a bin number using binlist.io API."""
-
-    url = f"https://lookup.binlist.net/{bin_number}"
-    response = requests.get(url)
-
-    if response.status_code == 200:
-        data = response.json()
-        return data["scheme"] == card_type  # Check for specific card type
-    else:
-        return False
-
+def check_Bin(bin_number):
+    url = f"https://binlist.io/lookup/{bin_number}"
+    retries = 3
+    while retries > 0:
+        try:
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                if data:
+                    return {
+                        "bin": bin_number,
+                        "scheme": data.get("scheme", "N/A"),
+                        "country": data.get("country", {}).get("name", "N/A"),
+                        "type": data.get("type", "N/A"),
+                        "category": data.get("category", "N/A"),
+                        "bank": data.get("bank", {}).get("name", "N/A")
+                    }
+            time.sleep(random.uniform(1, 3))
+        except requests.exceptions.RequestException:
+            retries -= 1
+            time.sleep(random.uniform(1, 3))
+    return None
+    
 def generate_bin(card_type, length=6):
     """Generates a random bin number of the specified length."""
 
@@ -46,13 +57,14 @@ def main():
     valid_bins = []
     for _ in range(num_bins):
         bin_number = generate_bin(card_type)
-        if is_valid_bin(bin_number, card_type):
+        if check_bin(bin_number):
             valid_bins.append(bin_number)
 
     if valid_bins:
         filename = f"{card_type}_bins_{num_bins}.txt"
         with open(filename, "w") as file:
-            file.write("\n".join(valid_bins))
+            for bin_data in valid_bins:
+                file.write(json.dumps(bin_data) + "\n")
         print(f"Successfully saved {len(valid_bins)} valid bins to {filename}")
     else:
         print(f"No valid bins found for {card_type} after {num_bins} attempts.")
